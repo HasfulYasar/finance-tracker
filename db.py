@@ -31,6 +31,18 @@ def init_db():
     )
     """)
 
+    # Categories table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS categories (
+        category_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        type TEXT NOT NULL,         -- income or expense
+        name TEXT NOT NULL,         -- category name (e.g., salary, food, rent)
+        FOREIGN KEY (user_id) REFERENCES users(user_id)
+    )
+    """)
+
+
     conn.commit()
     conn.close()
     print("Database initialized at:", DB_PATH)

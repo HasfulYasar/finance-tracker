@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Categories</title>
+    <style>
+        body { font-family: Arial; margin: 20px; background: #f7f7f7; }
+        h2, h3 { color: #333; }
+        form input, form select { margin:5px 0; padding:8px; width:200px; }
+        input[type="submit"] { background:#28a745; color:white; border:none; padding:8px 12px; border-radius:5px; cursor:pointer; }
+        input[type="submit"]:hover { background:#218838; }
+        table { border-collapse: collapse; width: 70%; margin-top:20px; }
+        table, th, td { border:1px solid #555; }
+        th, td { padding:8px; text-align:center; }
+        a.back { display:inline-block; margin-top:20px; color:#fff; background:#007BFF; padding:8px 12px; text-decoration:none; border-radius:5px; }
+        a.back:hover { background:#0056b3; }
+        .edit, .delete { cursor:pointer; padding:5px 8px; border:none; border-radius:4px; }
+        .edit { background:#ffc107; color:#000; }
+        .edit:hover { background:#e0a800; }
+        .delete { background:#dc3545; color:#fff; }
+        .delete:hover { background:#a71d2a; }
+    </style>
+</head>
+<body>
+<h2>Manage Your Categories</h2>
+
+<h3>Add New Category</h3>
+<form method="post" action="/categories">
+    <input type="hidden" name="action" value="add">
+    Name: <input type="text" name="name" required><br>
+    Type:
+    <select name="type" required>
+        <option value="">Select Type</option>
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+    </select><br>
+    <input type="submit" value="Add Category">
+</form>
+
+<h3>Existing Categories</h3>
+<table>
+    <tr><th>Name</th><th>Type</th><th>Edit</th><th>Delete</th></tr>
+    {% for cat in categories %}
+    <tr>
+        <!-- Edit form -->
+        <form method="post" action="/categories">
+            <td>
+                <input type="text" name="name" value="{{ cat[1] }}" required>  <!-- cat[1]=name -->
+            </td>
+            <td>
+                <select name="type" required>
+                    <option value="income" {% if cat[2]=='income' %}selected{% endif %}>Income</option>
+                    <option value="expense" {% if cat[2]=='expense' %}selected{% endif %}>Expense</option>
+                </select>
+            </td>
+            <td>
+                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="category_id" value="{{ cat[0] }}"> <!-- cat[0]=category_id -->
+                <input type="submit" class="edit" value="Edit">
+            </td>
+        </form>
+        <!-- Delete form -->
+        <form method="post" action="/categories">
+            <td>
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="category_id" value="{{ cat[0] }}">
+                <input type="submit" class="delete" value="Delete">
+            </td>
+        </form>
+    </tr>
+    {% endfor %}
+</table>
+
+<a class="back" href="/dashboard">Back to Dashboard</a>
+</body>
+</html>
